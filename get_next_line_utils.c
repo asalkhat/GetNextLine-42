@@ -6,17 +6,17 @@
 /*   By: asalkhat <asalkhat@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 15:25:45 by asalkhat          #+#    #+#             */
-/*   Updated: 2026/10/09 15:36:28 by asalkhat         ###   ########.fr       */
+/*   Updated: 2026/10/09 19:32:46 by asalkhat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char *strjoin(const char *save, const char *buff)
+char	*strjoin(const char *save, const char *buff)
 {
-	char *ptr;
-	size_t i;
-	size_t j;
+	char	*ptr;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = ft_strlen(buff);

@@ -6,7 +6,7 @@
 /*   By: asalkhat <asalkhat@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 15:05:32 by asalkhat          #+#    #+#             */
-/*   Updated: 2026/10/09 15:40:52 by asalkhat         ###   ########.fr       */
+/*   Updated: 2026/10/09 20:01:13 by asalkhat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static char	*read_and_save(int fd, char *save)
 {
-	char *buff;
-	char *temp;
-	int i;
-	int num;
+	char	*buff;
+	char	*temp;
+	int		i;
+	int		num;
 
 	buff = malloc(BUFFER_SIZE + 1);
-	if (!buff)
+	if (buff == NULL)
 		return (free(save), NULL);
 	num = 1;
 	while (num > 0)
@@ -29,12 +29,12 @@ static char	*read_and_save(int fd, char *save)
 		while (save && save[i] != '\n' && save[i] != '\0')
 			i++;
 		if (save && save[i] == '\n')
-			break;
+			break ;
 		num = read(fd, buff, BUFFER_SIZE);
 		if (num < 0)
 			return (free(buff), free(save), NULL);
 		if (num == 0)
-			break;
+			break ;
 		buff[num] = '\0';
 		temp = strjoin(save, buff);
 		if (!temp)
@@ -61,8 +61,8 @@ static char	*extract_line(char *save)
 static char	*update_save(char *save)
 {
 	char	*ptr;
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 0;
 	while (save[i] != '\n' && save[i] != '\0')
@@ -78,7 +78,7 @@ static char	*update_save(char *save)
 char	*get_next_line(int fd)
 {
 	static char	*save;
-	char	*line;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
