@@ -3,130 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asalkhat <asalkhat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asalkhat <asalkhat@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/08 19:44:25 by asalkhat          #+#    #+#             */
-/*   Updated: 2026/10/09 01:01:08 by asalkhat         ###   ########.fr       */
+/*   Created: 2026/10/09 15:05:32 by asalkhat          #+#    #+#             */
+/*   Updated: 2026/10/09 15:40:52 by asalkhat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-
-static char	*strjoin_2(const char *save, const char *buff)
-{
-	size_t	i;
-	size_t	j;
-	char	*ptr;
-
-	i = 0;
-	j = 0;
-	while (save[i])
-		i++;
-	while (buff[j])
-		j++;
-	ptr = malloc(i + j + 1);
-	if (ptr == NULL)
-		return (NULL);
-	i = 0;
-	while (save[i] != '\0')
-	{
-		ptr[i] = save[i];
-		i++;
-	}
-	j = 0;
-	while (buff[j] != '\0')
-		ptr[i++] = buff[j++];
-	ptr[i] = '\0';
-	return (ptr);
-}
-
-static char	*strjoin(const char *save, const char *buff)
-{
-	char	*ptr;
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (buff[j])
-		j++;
-	if (save == NULL)
-	{
-		ptr = malloc(j + 1);
-		if (ptr == NULL)
-			return (NULL);
-		while (buff[i] != '\0')
-		{
-			ptr[i] = buff[i];
-			i++;
-		}
-		ptr[i] = '\0';
-		return (ptr);
-	}
-	ptr = strjoin_2(save, buff);
-	return (ptr);
-}
-
-static char	*ft_substr(const char *s, unsigned int start, size_t len)
-{
-	char	*ptr;
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	if (start >= i)
-	{
-		ptr = malloc(1);
-		if (ptr == NULL)
-			return (NULL);
-		ptr[0] = '\0';
-		return (ptr);
-	}
-	ptr = malloc(len + 1);
-	if (ptr == NULL)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start + i] != '\0')
-	{
-		ptr[i] = s[start + i];
-		i++;
-	}
-	ptr[i] = '\0';
-	return (ptr);
-}
+#include "get_next_line.h"
 
 static char	*read_and_save(int fd, char *save)
 {
-	char	buff[BUFFER_SIZE + 1];
-	int		num;
-	int		i;
+	char *buff;
+	char *temp;
+	int i;
+	int num;
 
-	while ((num = read(fd, buff, BUFFER_SIZE)) && num != -1)
+	buff = malloc(BUFFER_SIZE + 1);
+	if (!buff)
+		return (free(save), NULL);
+	num = 1;
+	while (num > 0)
 	{
-		buff[num] = '\0';
 		i = 0;
-		while (buff[i] != '\n' && buff[i] != '\0')
+		while (save && save[i] != '\n' && save[i] != '\0')
 			i++;
-		if (buff[i] == '\n')
-		{
-			save = strjoin(save, buff);
-			break ;
-		}
-		save = strjoin(save, buff);
-	}
-	if (num == -1)
-	{
+		if (save && save[i] == '\n')
+			break;
+		num = read(fd, buff, BUFFER_SIZE);
+		if (num < 0)
+			return (free(buff), free(save), NULL);
+		if (num == 0)
+			break;
+		buff[num] = '\0';
+		temp = strjoin(save, buff);
+		if (!temp)
+			return (free(buff), free(save), NULL);
 		free(save);
-		return (NULL);
+		save = temp;
 	}
+	free(buff);
 	return (save);
 }
 
 static char	*extract_line(char *save)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (save[i] != '\n' && save[i] != '\0')
@@ -139,15 +61,15 @@ static char	*extract_line(char *save)
 static char	*update_save(char *save)
 {
 	char	*ptr;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
-	j = 0;
 	while (save[i] != '\n' && save[i] != '\0')
 		i++;
-	while (save[j] != '\0')
-		j++;
+	if (save[i] == '\0' || save[i + 1] == '\0')
+		return (free(save), NULL);
+	j = ft_strlen(save);
 	ptr = ft_substr(save, i + 1, j - (i + 1));
 	free(save);
 	return (ptr);
@@ -156,8 +78,10 @@ static char	*update_save(char *save)
 char	*get_next_line(int fd)
 {
 	static char	*save;
-	char		*line;
+	char	*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	save = read_and_save(fd, save);
 	if (save == NULL)
 		return (NULL);
