@@ -23,7 +23,7 @@ This project helps develop an understanding of file descriptors, the `read()` sy
 Compile the project with:
 
 ```bash
-cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c -o gnl
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c
 ```
 
 Replace `main.c` with your test file if it has a different name.
@@ -33,7 +33,7 @@ Replace `main.c` with your test file if it has a different name.
 Run the program:
 
 ```bash
-./gnl
+./a.out
 ```
 
 The test program should open a file, call `get_next_line()` repeatedly, print each returned line, and free the memory allocated for each line.
