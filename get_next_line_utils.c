@@ -6,11 +6,13 @@
 /*   By: asalkhat <asalkhat@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 15:25:45 by asalkhat          #+#    #+#             */
-/*   Updated: 2026/10/09 19:32:46 by asalkhat         ###   ########.fr       */
+/*   Updated: 2026/10/10 09:12:46 by asalkhat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+static char	*strjoin_2(const char *save, const char *buff);
 
 char	*strjoin(const char *save, const char *buff)
 {

@@ -6,17 +6,32 @@
 /*   By: asalkhat <asalkhat@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 15:05:32 by asalkhat          #+#    #+#             */
-/*   Updated: 2026/10/09 20:01:13 by asalkhat         ###   ########.fr       */
+/*   Updated: 2026/10/10 10:52:08 by asalkhat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+static int	read_and_save_2(const char *save)
+{
+	int	i;
+
+	if (save == NULL)
+		return (0);
+	i = 0;
+	while (save[i] != '\0')
+	{
+		if (save[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 static char	*read_and_save(int fd, char *save)
 {
 	char	*buff;
 	char	*temp;
-	int		i;
 	int		num;
 
 	buff = malloc(BUFFER_SIZE + 1);
@@ -25,10 +40,7 @@ static char	*read_and_save(int fd, char *save)
 	num = 1;
 	while (num > 0)
 	{
-		i = 0;
-		while (save && save[i] != '\n' && save[i] != '\0')
-			i++;
-		if (save && save[i] == '\n')
+		if (read_and_save_2(save))
 			break ;
 		num = read(fd, buff, BUFFER_SIZE);
 		if (num < 0)
@@ -42,8 +54,7 @@ static char	*read_and_save(int fd, char *save)
 		free(save);
 		save = temp;
 	}
-	free(buff);
-	return (save);
+	return (free(buff), save);
 }
 
 static char	*extract_line(char *save)
@@ -86,6 +97,12 @@ char	*get_next_line(int fd)
 	if (save == NULL)
 		return (NULL);
 	line = extract_line(save);
+	if (line == NULL)
+	{
+		free(save);
+		save = NULL;
+		return (NULL);
+	}
 	save = update_save(save);
 	return (line);
 }
